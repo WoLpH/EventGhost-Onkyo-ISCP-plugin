@@ -18,6 +18,9 @@ eg.RegisterPlugin(
 )
 
 
+ISCP_HEADER_FORMAT = '!4sIIBxxx'
+
+
 class Text:
     tcpBox = 'TCP/IP Settings'
     ip = 'IP:'
@@ -62,7 +65,7 @@ class OnkyoISCP(eg.PluginBase):
                     reply = self.socket.recv(1024)
                     # unpack ISCP header
                     header, headersize, datasize, version = unpack(
-                        '!4sIIBxxx', reply[0:self.headersize])
+                        ISCP_HEADER_FORMAT, reply[0:self.headersize])
 
                     if header != self.header:
                         self.PrintError('OnkyoISCP: Received packet not ISCP')
@@ -92,6 +95,7 @@ class OnkyoISCP(eg.PluginBase):
                     self.TriggerEvent(command + parameter)
             except Exception as e:
                 self.PrintError('OnkyoISCP: ' + str(e))
+                return
 
     def Connect(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -152,12 +156,9 @@ class SendCommand(eg.ActionBase):
         # while others (Onkyo PR-SC5507) work fine without it
         # both work when the headersize is included
         datasize = self.plugin.headersize + len(message)
-        line = pack('!4sIIBxxx',
-                    self.plugin.header,
-                    self.plugin.headersize,
-                    datasize,
-                    self.plugin.version
-                    ) + message
+        line = pack(ISCP_HEADER_FORMAT, self.plugin.header,
+                    self.plugin.headersize, datasize, self.plugin.version)
+        line += message
         try:
             self.plugin.socket.sendall(line)
             sleep(0.1)
