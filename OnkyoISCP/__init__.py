@@ -155,7 +155,10 @@ class SendCommand(eg.ActionBase):
         # to make it work for some models (Integra DHC-9.9)
         # while others (Onkyo PR-SC5507) work fine without it
         # both work when the headersize is included
-        datasize = self.plugin.headersize + len(message)
+
+        # TODO: Test if this works for most people
+        # datasize = self.plugin.headersize + len(message)
+        datasize = len(message)
         line = pack(ISCP_HEADER_FORMAT, self.plugin.header,
                     self.plugin.headersize, datasize, self.plugin.version)
         line += message
