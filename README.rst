@@ -18,7 +18,7 @@ Install
 ==============================================================================
 
  - Download: https://github.com/WoLpH/EventGhost-Onkyo-ISCP-plugin/archive/master.zip
- - Unzip the `master.zip` file to `C:\Program Files (x86)\EventGhost\plugins`
+ - Unzip the `master.zip` file to `C:\\Program Files (x86)\\EventGhost\\plugins`
  - Restart EventGhost
  - Add the plugin to autostart
  - Configure the plugin so the IP and ports are correct. The default port is `60128`
